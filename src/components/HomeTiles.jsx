@@ -1,12 +1,17 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text,TouchableOpacity } from 'react-native';
 import tw from 'twrnc'
 
-const HomeTiles = () => {
+import {Theme} from './../constants'
+
+const HomeTiles = (props) => {
   return (
-    <View style={tw`w-34 h-34 bg-slate-500 rounded-lg m-3`}>
-      <Text >ddfd</Text>
-    </View>
+    <TouchableOpacity style={tw`w-33 h-33 pt-5 bg-[${Theme.colors.secondary}] rounded-lg m-4 justify-center items-center shadow-lg`}>
+      {props.icon}
+      <Text style={tw`text-xl m-2 text-white`}>
+        {props.taskName}
+      </Text>
+    </TouchableOpacity>
   );
 }
 

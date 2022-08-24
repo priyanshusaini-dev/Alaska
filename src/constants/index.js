@@ -1,5 +1,6 @@
-import CarouselData from './CarousselData';
+import TileData from './TileData';
+import Theme from './Theme';
 
 export{
-    CarouselData
+    TileData,Theme
 }

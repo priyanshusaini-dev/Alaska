@@ -1,9 +1,12 @@
-import { createStackNavigator } from '@react-navigation/stack'
+// import { createStackNavigator } from '@react-navigation/stack'
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
 import { useFonts } from "expo-font";
+import { Ionicons } from '@expo/vector-icons';
 
-import Home from './src/screens/Home';
-
+import {Theme} from './src/constants'
+import {Home,Details,Account} from './src/screens';
+import {CustomDrawer,MyHeader} from './src/components'
 
 const theme = {
   ...DefaultTheme,
@@ -13,7 +16,9 @@ const theme = {
   }
 }
 
-const Stack = createStackNavigator()
+// const Stack = createStackNavigator()
+const Drawer = createDrawerNavigator();
+
 
 export default function App() {
   // const [loaded] = useFonts({
@@ -28,10 +33,25 @@ export default function App() {
 
   return (
     <NavigationContainer theme={theme}>
-      <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="Home">
-        <Stack.Screen name="Home" component={Home}/>
-        {/* <Stack.Screen name="Details" component={Details}/> */}
-      </Stack.Navigator>
+      <Drawer.Navigator drawerContent={props => <CustomDrawer {...props} />} screenOptions={
+        {
+          headerShown: false,
+          drawerLabelStyle: { marginLeft: -13, fontSize: 16 },
+          drawerActiveBackgroundColor: Theme.colors.tertiary,
+          drawerActiveTintColor: Theme.colors.primary,
+          drawerInactiveTintColor: Theme.colors.secondary,
+        }} initialRouteName="Home">
+
+        <Drawer.Screen name="Home" component={Home} options={{
+          drawerIcon: ({ color }) => (<Ionicons name="home-outline" size={24} color={color} />)
+        }} />
+        <Drawer.Screen name="Details" component={Details} options={{
+          drawerIcon: ({ color }) => (<Ionicons name="ios-add-circle-outline" size={24} color={color} />)
+        }} />
+        <Drawer.Screen name="Account" component={Account} options={{
+          drawerIcon: ({ color }) => (<Ionicons name="ios-person-outline" size={24} color={color} />)
+        }} />
+      </Drawer.Navigator>
     </NavigationContainer>
   );
 }

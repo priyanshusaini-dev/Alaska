@@ -1,7 +1,8 @@
 import HomeTiles from './HomeTiles';
-import CarouselCards from './CarouselCardItem';
 import WavyHeader from './WavyHeader';
+import MyHeader from './MyHeader';
+import CustomDrawer from './CustomDrawer';
 
 export {
-    HomeTiles,CarouselCards,WavyHeader
+    HomeTiles,WavyHeader,CustomDrawer,MyHeader
 }
