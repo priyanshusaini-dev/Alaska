@@ -5,8 +5,8 @@ import { useFonts } from "expo-font";
 import { Ionicons } from '@expo/vector-icons';
 
 import {Theme} from './src/constants'
-import {Home,Details,Account} from './src/screens';
-import {CustomDrawer,MyHeader} from './src/components'
+import {Home,RideReq,Account} from './src/screens';
+import {CustomDrawer} from './src/components'
 
 const theme = {
   ...DefaultTheme,
@@ -37,15 +37,15 @@ export default function App() {
         {
           headerShown: false,
           drawerLabelStyle: { marginLeft: -13, fontSize: 16 },
-          drawerActiveBackgroundColor: Theme.colors.tertiary,
-          drawerActiveTintColor: Theme.colors.primary,
-          drawerInactiveTintColor: Theme.colors.secondary,
-        }} initialRouteName="Home">
+          drawerActiveBackgroundColor: Theme.colors.light,
+          drawerActiveTintColor: Theme.colors.secondary,
+          drawerInactiveTintColor: Theme.colors.primary,
+        }} initialRouteName="Request a Ride">
 
         <Drawer.Screen name="Home" component={Home} options={{
           drawerIcon: ({ color }) => (<Ionicons name="home-outline" size={24} color={color} />)
         }} />
-        <Drawer.Screen name="Details" component={Details} options={{
+        <Drawer.Screen name="Request a Ride" component={RideReq} options={{
           drawerIcon: ({ color }) => (<Ionicons name="ios-add-circle-outline" size={24} color={color} />)
         }} />
         <Drawer.Screen name="Account" component={Account} options={{

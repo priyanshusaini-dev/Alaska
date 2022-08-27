@@ -2,7 +2,7 @@
     {
         id: 1,
         icon: 'ios-add-circle-sharp',
-        taskName: 'New Ride'
+        taskName: 'Request a Ride'
     },
     {
         id: 2,

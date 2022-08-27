@@ -1,7 +1,7 @@
 import Home from './Home';
-import Details from './Details';
+import RideReq from './RideReq';
 import Account from './Account';
 
 export{
-    Home,Details,Account
+    Home,RideReq,Account
 }

@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, FlatList } from 'react-native';
 import tw from 'twrnc'
 import { StatusBar } from 'expo-status-bar';
-import { Ionicons } from '@expo/vector-icons';
 
 import {TileData,Theme} from './../constants'
 import { HomeTiles, WavyHeader,MyHeader} from './../components';
@@ -12,11 +11,11 @@ import { HomeTiles, WavyHeader,MyHeader} from './../components';
 const Home = ({navigation}) => {
     
     return (
-        <View>
+        <View style={tw`bg-[${Theme.colors.bg}] flex-1`}>
             <MyHeader navigation={navigation}/>
             <WavyHeader navigation={navigation}/>
             <View>
-                <Text style={tw`text-2xl text-[${Theme.colors.primary}] ml-8`}>
+                <Text style={tw`text-2xl text-[${Theme.colors.special}] ml-8`}>
                     Hi, John Doe {'\n'}Where do you want to go?
                 </Text>
             </View>
@@ -24,10 +23,10 @@ const Home = ({navigation}) => {
                 contentContainerStyle={tw`w-full items-center`}
                 numColumns={2}
                 data={TileData}
-                renderItem={(i) => <HomeTiles icon={<Ionicons name={i.item.icon} size={48} color={'white'} />} taskName={i.item.taskName} />}
+                renderItem={(i) => <HomeTiles icon={i.item.icon} taskName={i.item.taskName} navigation={navigation}/>}
                 keyExtractor={item => item.id}
             />
-            <StatusBar hidden={false} barStyle="light-content" backgroundColor={Theme.colors.secondary} animated={true} />
+            <StatusBar hidden={false} barStyle="light-content" backgroundColor={Theme.colors.primary_light} animated={true} />
         </View>
     );
 }
