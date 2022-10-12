@@ -22,7 +22,7 @@ export default function RideReq({ navigation }) {
           <Text style={tw`text-slate-300 text-lg`}>|</Text>
           <GooglePlacesAutocomplete
 
-
+onFail={error => console.error(error)}
             placeholder="Where From?"
             nearbyPlacesAPI='GooglePlacesSearch'
             debounce={400}

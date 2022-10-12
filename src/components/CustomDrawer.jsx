@@ -4,10 +4,23 @@ import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawe
 import tw from 'twrnc'
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { auth } from "../config/firebase";
+import { useNavigation } from "@react-navigation/native";
 
 import {Theme} from './../constants'
 
 export default function CustomDrawer(props) {
+  const navigation = useNavigation();
+
+  function signOut(){
+    auth
+    .signOut()
+    .then(()=>{
+      navigation.replace("SignIn")
+    })
+    .catch(err=>alert(err.message))
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <DrawerContentScrollView contentContainerStyle={{ backgroundColor: Theme.colors.white }} {...props}>
@@ -32,7 +45,7 @@ export default function CustomDrawer(props) {
           <Ionicons name="share-social-outline" size={24} color={Theme.colors.special} />
           <Text style={tw`text-[${Theme.colors.special}] px-2 font-semibold text-4`}> Tell a Friend</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => { }} style={tw`pt-2 mb-3 flex-row`}>
+        <TouchableOpacity onPress={() => { signOut()}} style={tw`pt-2 mb-3 flex-row`} >
           <Ionicons name="exit-outline" size={24} color={Theme.colors.special} />
           <Text style={tw`text-[${Theme.colors.special}] px-2 font-semibold text-4`}> Sign Out</Text>
         </TouchableOpacity>

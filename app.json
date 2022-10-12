@@ -28,6 +28,9 @@
     },
     "web": {
       "favicon": "./assets/icon2.png"
-    }
+    },
+    "plugins": [
+      "react-native-fbsdk-next"
+    ]
   }
 }
