@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#4E2A84"
+      "backgroundColor": "#7A91BC"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -18,19 +18,45 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "SKAdNetworkItems": [
+          {
+            "SKAdNetworkIdentifier": "v9wttpbfk9.skadnetwork"
+          },
+          {
+            "SKAdNetworkIdentifier": "n38lu8286q.skadnetwork"
+          }
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
-        "backgroundColor": "#4E2A84"
-      }
+        "backgroundColor": "#7A91BC"
+      },
+      "permissions": [
+        "android.permission.INTERNET"
+      ],
+      "package": "com.priyanshusaini.alaska"
     },
     "web": {
       "favicon": "./assets/icon2.png"
     },
     "plugins": [
-      "react-native-fbsdk-next"
-    ]
+      [
+        "react-native-fbsdk-next",
+        {
+          "appID": "1204655017060105",
+          "clientToken": "382dbf472839952abb08975b05d48f85",
+          "displayName": "Alaska"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "5f2743d1-e2b7-4924-9e5a-e8b2e2f7f641"
+      }
+    }
   }
 }

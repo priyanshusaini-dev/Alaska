@@ -1,0 +1,8 @@
+<resources>
+  <string name="app_name">Alaska</string>
+  <string name="expo_splash_screen_resize_mode" translatable="false">contain</string>
+  <string name="expo_splash_screen_status_bar_translucent" translatable="false">false</string>
+  <string name="facebook_app_id">1204655017060105</string>
+  <string name="facebook_client_token">382dbf472839952abb08975b05d48f85</string>
+  <string name="fb_login_protocol_scheme">fb1204655017060105</string>
+</resources>
