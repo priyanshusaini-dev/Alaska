@@ -1,18 +1,23 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Intro, SignIn, SignUp } from "../screens";
+import { SignIn, SignUp,OnboardingScreen } from "../screens";
 import DrawerNavigator from "./DrawerNavigator";
 import { useState, useEffect } from "react"
+import { ActivityIndicator, View } from 'react-native';
+import tw  from 'twrnc';
+import {SignInWelcome} from '../screens/signin'
+import {useFonts, Poppins_400Regular,Poppins_700Bold,Poppins_500Medium } from '@expo-google-fonts/poppins';
+
 
 const Stack = createStackNavigator();
 
 
 const StackNavigator = () => {
   const [isFirstLaunch, setIsFirstLaunch] = useState(null);
-
+  const [fontsLoaded] =  useFonts({ Poppins_400Regular,Poppins_700Bold ,Poppins_500Medium,'nunitoRegular': require('../../assets/fonts/Nunito-Regular.ttf'), 'nunitoBold': require('../../assets/fonts/Nunito-Bold.ttf'),})
   async function checkIfFirstLaunch() {
     try {
-      const hasFirstLaunched = await AsyncStorage.getItem("@showIntro");
+      const hasFirstLaunched = await AsyncStorage.getItem("@onboarding");
       if (hasFirstLaunched === null) {
         return true;
       }
@@ -29,6 +34,12 @@ const StackNavigator = () => {
     getInfo();
   }, []);
 
+  if(isFirstLaunch==null&&!fontsLoaded){
+    return<View style={tw`justify-center items-center h-full`}>
+      <ActivityIndicator size="large"/>
+    </View>
+  }
+
 
   return (
     isFirstLaunch != null && (
@@ -36,12 +47,13 @@ const StackNavigator = () => {
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName="Intro"
+        initialRouteName="OnboardingScreen"
       >
         <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="SignInWelcome" component={SignInWelcome} />
         <Stack.Screen name="SignIn" component={SignIn} />
-        {isFirstLaunch && <Stack.Screen name="Intro" component={Intro} />}
         <Stack.Screen name="Drawer" component={DrawerNavigator} />
+        {isFirstLaunch && <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} />}
       </Stack.Navigator>
     )
   );

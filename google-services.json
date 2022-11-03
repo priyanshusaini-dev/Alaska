@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "250514128771",
+    "project_id": "alask-7883d",
+    "storage_bucket": "alask-7883d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:250514128771:android:9c2d858e30d631cf6680b6",
+        "android_client_info": {
+          "package_name": "com.priyanshusaini.alaska"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "250514128771-8ojoa161c924reeknt6np2noj2s3351p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.priyanshusaini.alaska",
+            "certificate_hash": "4ccfbf4e94fed05715bb26f0369731dec83bebe2"
+          }
+        },
+        {
+          "client_id": "250514128771-qgs62s0fvc8n45m4iv7s446pbhmqm90r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.priyanshusaini.alaska",
+            "certificate_hash": "6ccb8b1d5e0696a1a8f2a30342da90c76a12915e"
+          }
+        },
+        {
+          "client_id": "250514128771-8lnec1t1v1fanc4a8644aoct215qd36t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFfT95Fqmi1-fLOA-37xzn6E9fqytgXMA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "250514128771-8lnec1t1v1fanc4a8644aoct215qd36t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,20 +1,19 @@
-import { View, Text, TouchableOpacity, TextInput } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import tw from "twrnc";
 import { Theme } from "../../constants";
-import { auth } from "../../config/firebase";
-import { HideKeyboard } from "../../components";
-import { FontAwesome } from "@expo/vector-icons";
-import {  useEffect } from "react"
-import { useForm, Controller } from "react-hook-form";
+import { HideKeyboard, CustomInput } from "../../components";
+import { useEffect,useState } from "react";
+import { useForm } from "react-hook-form";
 import { StatusBar } from "expo-status-bar";
-
+import auth from "@react-native-firebase/auth";
 
 const EMAIL_REGEX =
   /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 const PASS_REGEX = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
 const SignUp = ({ navigation }) => {
+  // const [name, setName] = useState(null);
   const { colors } = Theme;
   const {
     control,
@@ -30,29 +29,35 @@ const SignUp = ({ navigation }) => {
     },
   });
 
-useEffect(()=>{
- const unsubscribe = auth.onAuthStateChanged(user=>{
-    if(user){
-      navigation.replace("Drawer")
-    }
-  })
+  useEffect(() => {
+    const unsubscribe = auth().onAuthStateChanged((user) => {
+      if (user) {
+        navigation.replace("Drawer");
+      }
+    });
 
-  return unsubscribe
-},[])
+    return unsubscribe;
+  }, []);
 
 
-
-  const onSubmit = (data) => {
-    const {email,password,name}=data;
-
-    auth
-      .createUserWithEmailAndPassword(name,email,password)
+   const onSubmit = (data) => {
+    const { email, password, name } = data;
+    // setName(name);
+    auth()
+      .createUserWithEmailAndPassword(email, password)
       .then((userCredentials) => {
-        const user = userCredentials.user;
-        console.log(user.email);
+        // const user = userCredentials.user;
+        const user = firebase.auth().currentUser;
+        const update = {
+          displayName: name,
+        }
+        return user.updateProfile(update)
       })
-      .catch((err) => alert(err.message));
+      .catch((err) => alert(err));
   };
+
+
+
   return (
     <HideKeyboard>
       <SafeAreaView
@@ -70,36 +75,27 @@ useEffect(()=>{
             <Text style={tw`text-[${colors.white}] text-4 uppercase mt-4`}>
               Name
             </Text>
-            <Controller
+            <CustomInput
               control={control}
-              name="name"
-              rules={{
-                required: true,
-                minLength: {
-                  value: 3,
-                  message: "Username must be at least 3 characters",
+              errors={errors.name}
+              inputfeild={{
+                rules: {
+                  required: true,
+                  minLength: {
+                    value: 3,
+                    message: "Username must be at least 3 characters",
+                  },
+                  maxLength: {
+                    value: 28,
+                    message: "Username must be at most 28 characters",
+                  },
                 },
-                maxLength: {
-                  value: 28,
-                  message: "Username must be at most 28 characters",
-                },
+                name: "name",
+                autoComplete: "name",
+                keyboardType: "default",
+                placeholder: "Name",
+                secureTextEntry: false,
               }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  value={value}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  style={tw`border border-[${
-                    errors.name ? "#ff1303" : colors.light
-                  }] mt-1 h-11 p-3 rounded text-white bg-[${colors.primary}]`}
-                  placeholder="Name"
-                  // keyboardType="email-address"
-                  autoComplete="email"
-                  // clearButtonMode="while-editing"
-                  cursorColor="#fff"
-                  placeholderTextColor={colors.secondary_light}
-                />
-              )}
             />
             {errors.name && (
               <Text style={tw`text-red-500 text-3`}>
@@ -110,32 +106,23 @@ useEffect(()=>{
             <Text style={tw`text-[${colors.white}] text-4 uppercase mt-4`}>
               E-mail
             </Text>
-            <Controller
+            <CustomInput
               control={control}
-              name="email"
-              rules={{
-                required: true,
-                pattern: {
-                  value: EMAIL_REGEX,
-                  message: "Invalid Email",
+              errors={errors.email}
+              inputfeild={{
+                rules: {
+                  required: true,
+                  pattern: {
+                    value: EMAIL_REGEX,
+                    message: "Invalid Email",
+                  },
                 },
+                name: "email",
+                autoComplete: "email",
+                keyboardType: "email-address",
+                placeholder: "E-mail",
+                secureTextEntry: false,
               }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  value={value}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  style={tw`border border-[${
-                    errors.email ? "#ff1303" : colors.light
-                  }] mt-1 h-11 p-3 rounded text-white bg-[${colors.primary}]`}
-                  placeholder="E-mail"
-                  keyboardType="email-address"
-                  autoComplete="email"
-                  clearButtonMode="while-editing"
-                  cursorColor="#fff"
-                  placeholderTextColor={colors.secondary_light}
-                />
-              )}
             />
             {errors.email && (
               <Text style={tw`text-red-500 text-3`}>
@@ -146,31 +133,24 @@ useEffect(()=>{
             <Text style={tw`text-[${colors.white}] text-4 uppercase mt-2`}>
               Password
             </Text>
-            <Controller
+            <CustomInput
               control={control}
-              name="password"
-              rules={{
-                required: true,
-                pattern: {
-                  value: PASS_REGEX,
-                  message:
-                    "Password must have min 8 and max 18 characters, with at least a symbol,a upper and a lower case characters and a number",
+              errors={errors.password}
+              inputfeild={{
+                rules: {
+                  required: true,
+                  pattern: {
+                    value: PASS_REGEX,
+                    message:
+                      "Password must have min 8 and max 18 characters, with at least a symbol,a upper and a lower case characters and a number",
+                  },
                 },
+                name: "password",
+                autoComplete: "password",
+                keyboardType: "default",
+                placeholder: "Password",
+                secureTextEntry: true,
               }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  value={value}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  style={tw`border border-[${
-                    errors.password ? "#ff1303" : colors.light
-                  }] mt-1 h-11 p-3 rounded text-white bg-[${colors.primary}]`}
-                  placeholder="Password"
-                  cursorColor="#fff"
-                  secureTextEntry={true}
-                  placeholderTextColor={colors.secondary_light}
-                />
-              )}
             />
             {errors.password && (
               <Text style={tw`text-red-500 text-3`}>
@@ -181,37 +161,24 @@ useEffect(()=>{
             <Text style={tw`text-[${colors.white}] text-4 uppercase mt-2`}>
               Confirm Password
             </Text>
-            <Controller
+            <CustomInput
               control={control}
-              name="confirm_password"
-              rules={{
-                required: true,
-                // pattern: {
-                //   value: PASS_REGEX,
-                //   message:
-                //     "Password must have min 8 and max 18 characters, with at least a symbol,a upper and a lower case characters and a number",
-                // },
-                validate: (val) => {
-                  if (watch("password") != val) {
-                    return "Your passwords do no match";
-                  }
+              errors={errors.confirm_password}
+              inputfeild={{
+                rules: {
+                  required: true,
+                  validate: (val) => {
+                    if (watch("password") != val) {
+                      return "Your passwords do no match";
+                    }
+                  },
                 },
+                name: "confirm_password",
+                autoComplete: "password",
+                keyboardType: "default",
+                placeholder: "Password",
+                secureTextEntry: true,
               }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  value={value}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  style={tw`border border-[${
-                    errors.confirm_password ? "#ff1303" : colors.light
-                  }] mt-1 h-11 p-3 rounded text-white bg-[${colors.primary}]`}
-                  placeholder="Password"
-                  // cursorColor="#fff"
-                  // keyboardType="visible-password"
-                  secureTextEntry={true}
-                  placeholderTextColor={colors.secondary_light}
-                />
-              )}
             />
             {errors.confirm_password && (
               <Text style={tw`text-red-500 text-3`}>
@@ -255,7 +222,7 @@ useEffect(()=>{
             </Text>
           </TouchableOpacity>
         </View>
-      <StatusBar
+        <StatusBar
           hidden={false}
           barStyle="light-content"
           backgroundColor={colors.primary_light2}

@@ -1,26 +1,66 @@
-import { View, Text, TouchableOpacity, TextInput } from "react-native";
+import { View, Text, TouchableOpacity, Dimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import tw from "twrnc";
 import { Theme } from "../../constants";
-import { auth } from "../../config/firebase";
-import { HideKeyboard } from "../../components";
+import { HideKeyboard, CustomInput } from "../../components";
 import { FontAwesome } from "@expo/vector-icons";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { StatusBar } from "expo-status-bar";
-import {  useEffect } from "react"
-// import {logInAsync} from 'expo-google-app-auth';
-// import {logInAsync} from 'expo-google-sign-in';
-// import * as GoogleSignIn from 'expo-google-sign-in';
-// import * as GoogleSignIn from 'expo-google-sign-in';
-
-
+import {  useEffect } from "react";
+import auth from "@react-native-firebase/auth";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+const windowHeight = Dimensions.get("screen").height;
 const EMAIL_REGEX =
   /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 const PASS_REGEX = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
+
 const SignIn = ({ navigation }) => {
   const { colors } = Theme;
 
+  GoogleSignin.configure({
+    webClientId:
+      "250514128771-8lnec1t1v1fanc4a8644aoct215qd36t.apps.googleusercontent.com",
+  });
+
+  // Set an initializing state whilst Firebase connects
+  // const [initializing, setInitializing] = useState(true);
+  // const [user, setUser] = useState();
+
+  // Handle user state changes=================>
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged((user) => {
+      // dispatch(setUser(user));
+      // console.log(user);
+      // if (initializing) setInitializing(false);
+      if (user) {
+        navigation.replace("Drawer");
+      }
+    });
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+  // ====google sign in ==============>
+  async function onGoogleButtonPress() {
+    // Get the users ID token
+    const { idToken } = await GoogleSignin.signIn();
+
+    // Create a Google credential with the token
+    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+    // Sign-in the user with the credential
+    const user_sign_in = auth().signInWithCredential(googleCredential);
+    user_sign_in
+      .then((user) => {
+        // setUser(user)
+        // navigation.replace("Drawer");
+      })
+      .catch((err) => {
+        alert(err);
+      });
+  }
+
+  // setting react form hook>>==================>>
   const {
     control,
     handleSubmit,
@@ -31,55 +71,26 @@ const SignIn = ({ navigation }) => {
       password: "",
     },
   });
+
+  // LOGIN WITH EMAIL=====================>>
   const onSubmit = (data) => {
-    const {email,password}=data;
-    auth
-      .signInWithEmailAndPassword(email,password)
+    const { email, password } = data;
+    auth()
+      .signInWithEmailAndPassword(email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
-        console.log(user);
+        // console.log(user);
       })
       .catch((err) => alert(err.message));
   };
 
-  async function signInWithGoogleAsync() {
-    // console.warn("hj")
-    // try {
-    //   const result = await logInAsync({
-    //     behavior:'web',
-    //     androidClientId: "21106027430-j6cp6vcinpot75c9p5pipukneotsa920.apps.googleusercontent.com",
-    //     // iosClientId: YOUR_CLIENT_ID_HERE,
-    //     scopes: ['profile', 'email'],
-    //   });
-  
-    //   if (result.type === 'success') {
-    //     return result.accessToken;
-    //   } else {
-    //     return { cancelled: true };
-    //   }
-    // } catch (e) {
-    //   return { error: true };
-    // }
-    
-  }
-  
-
-
-
-  useEffect(()=>{
-    const unsubscribe= auth.onAuthStateChanged(user=>{
-       if(user){
-         navigation.replace ("Drawer")
-       }
-     })   
-     return unsubscribe
-   },[])
-
   return (
     <HideKeyboard>
-      {/* <Scro */}
       <SafeAreaView
-        style={tw`bg-[${colors.primary_light}] h-full justify-between`}
+        style={{
+          ...tw`bg-[${colors.primary_light}] justify-between`,
+          height: windowHeight,
+        }}
       >
         <View>
           <View
@@ -92,66 +103,52 @@ const SignIn = ({ navigation }) => {
             <Text style={tw`text-[${colors.white}] text-4 uppercase mt-4`}>
               E-mail
             </Text>
-            <Controller
+            <CustomInput
               control={control}
-              rules={{
-                required: true,
-                pattern: {
-                  value: EMAIL_REGEX,
-                  message: "Invalid Email",
+              errors={errors.email}
+              inputfeild={{
+                rules: {
+                  required: true,
+                  pattern: {
+                    value: EMAIL_REGEX,
+                    message: "Invalid Email",
+                  },
                 },
+                name: "email",
+                autoComplete: "email",
+                keyboardType: "email-address",
+                placeholder: "E-mail",
+                secureTextEntry: false,
               }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  value={value}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  style={tw`border border-[${
-                    errors.email ? "#ff1303" : colors.light
-                  }] mt-1 h-11 p-3 rounded text-white bg-[${colors.primary}]`}
-                  placeholder="E-mail"
-                  keyboardType="email-address"
-                  autoComplete="email"
-                  clearButtonMode="while-editing"
-                  cursorColor="#fff"
-                  placeholderTextColor={colors.secondary_light}
-                />
-              )}
-              name="email"
             />
             {errors.email && (
               <Text style={tw`text-red-500 text-3`}>
                 {errors.email.message || "*E-mail is required."}
               </Text>
             )}
+
             <Text style={tw`text-[${colors.white}] text-4 uppercase mt-2`}>
               Password
             </Text>
-            <Controller
+
+            <CustomInput
               control={control}
-              rules={{
-                required: true,
-                pattern: {
-                  value: PASS_REGEX,
-                  message:
-                    "Password must have min 8 and max 18 characters, with at least a symbol,a upper and a lower case characters and a number",
+              errors={errors.password}
+              inputfeild={{
+                rules: {
+                  required: true,
+                  pattern: {
+                    value: PASS_REGEX,
+                    message:
+                      "Password must have min 8 and max 18 characters, with at least a symbol,a upper and a lower case characters and a number",
+                  },
                 },
+                name: "password",
+                autoComplete: "password",
+                keyboardType: "default",
+                placeholder: "Password",
+                secureTextEntry: true,
               }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  value={value}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  style={tw`border border-[${
-                    errors.password ? "#ff1303" : colors.light
-                  }] mt-1 h-11 p-3 rounded text-white bg-[${colors.primary}]`}
-                  placeholder="Password"
-                  cursorColor="#fff"
-                  secureTextEntry={true}
-                  placeholderTextColor={colors.secondary_light}
-                />
-              )}
-              name="password"
             />
             {errors.password && (
               <Text style={tw`text-red-500 text-3`}>
@@ -195,21 +192,8 @@ const SignIn = ({ navigation }) => {
           </TouchableOpacity>
           <Text style={tw`text-center text-[${colors.primary}] m-1`}>OR</Text>
           <TouchableOpacity
-            style={tw`bg-blue-400 rounded mx-6 my-2 flex-row items-center `}
-          >
-            <FontAwesome
-              name="facebook"
-              style={tw`mx-5`}
-              size={24}
-              color="white"
-            />
-            <Text style={tw`text-center p-3 text-white`}>
-              SignUp with Facebook
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+            onPress={() => onGoogleButtonPress()}
             style={tw`bg-red-400 rounded mx-6 my-2 flex-row items-center`}
-            onPress={()=>signInWithGoogleAsync()}
           >
             <FontAwesome
               name="google-plus"

@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#7A91BC"
+      "backgroundColor": "#000"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -18,41 +18,20 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "infoPlist": {
-        "SKAdNetworkItems": [
-          {
-            "SKAdNetworkIdentifier": "v9wttpbfk9.skadnetwork"
-          },
-          {
-            "SKAdNetworkIdentifier": "n38lu8286q.skadnetwork"
-          }
-        ]
-      }
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
-        "backgroundColor": "#7A91BC"
+        "backgroundColor": "#000"
       },
-      "permissions": [
-        "android.permission.INTERNET"
-      ],
-      "package": "com.priyanshusaini.alaska"
+      "package": "com.priyanshusaini.alaska",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/icon2.png"
     },
-    "plugins": [
-      [
-        "react-native-fbsdk-next",
-        {
-          "appID": "1204655017060105",
-          "clientToken": "382dbf472839952abb08975b05d48f85",
-          "displayName": "Alaska"
-        }
-      ]
-    ],
+    "plugins": ["@react-native-google-signin/google-signin"],
     "extra": {
       "eas": {
         "projectId": "5f2743d1-e2b7-4924-9e5a-e8b2e2f7f641"

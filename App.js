@@ -1,31 +1,32 @@
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
-import { useFonts } from "expo-font";
-import { useState, useEffect } from "react"
-import 'expo-dev-client';
+import "expo-dev-client";
 import { StackNavigator } from "./src/navigation";
-import firebaseConfig from "./firebaseConfig";
-
-
+// import firebaseConfig from "./firebaseConfig";
+import { Provider } from "react-redux";
+import { store } from "./src/store/store";
+import { ActivityIndicator, View,Text } from "react-native";
+import tw  from 'twrnc';
 
 
 const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    background: "transparent",
+    background: "#DCECF6",
   },
 };
 
 export default function App() {
 
 
-
-
   return (
     // <SafeAreaProvider>
-    <NavigationContainer theme={theme}>
-      <StackNavigator />
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer theme={theme}>
+        <StackNavigator />
+      </NavigationContainer>
+    </Provider>
+// {/* <Text style={{fontFamily:'Poppins_400Regular'}}>Helloaaaaaaaaaaaaaaaaaaaaa</Text> */}
     // </SafeAreaProvider>
   );
 }
