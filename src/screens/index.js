@@ -4,7 +4,8 @@ import Account from './Account';
 import OnboardingScreen from './OnboardingScreen';
 import SignIn from './signin/SignIn';
 import SignUp from './signin/SignUp';
+// import MobileVerify from './signin/SignUp/MobileVerify';
 
 export{
-    Home,RideReq,Account,SignIn,SignUp,OnboardingScreen
+    Home,RideReq,Account,SignIn,SignUp,OnboardingScreen,
 }

@@ -7,7 +7,7 @@ import { useState } from "react"
 import InsetShadow from "react-native-inset-shadow";
 
 
-export default function CustomInput({ control, errors, inputfeild }) {
+export default function CustomInput({ control, errors, inputfeild,color}) {
   const [rightIcon, setRightIcon] = useState('eye-slash');
   const handlePasswordVisibility = () => {
     if (rightIcon === 'eye') {
@@ -16,17 +16,24 @@ export default function CustomInput({ control, errors, inputfeild }) {
       setRightIcon('eye');
     }
   };
+  if(color=="pink"){
+    color="3DBBEEB";
+  }else if (color=="green"){
+    color="#D6F5F0";
+  }else{
+    color="#DBBEEB";
+  }
   return (
     <Controller
       control={control}
       rules={inputfeild.rules}
       render={({ field: { onChange, onBlur, value } }) => (
-        <InsetShadow right={false} bottom={false} shadowOffset={0.5} shadowOpacity={0.3} shadowRadius={5} elevation={3} containerStyle={tw`rounded-lg border-[0.8] h-11 border-[${errors ? "#f08a83" : "#DBBEEB"}] bg-[#E1DFE7] flex-row items-center`}>
+        <InsetShadow right={false} bottom={false} shadowOffset={0.5} shadowOpacity={0.3} shadowRadius={5} elevation={3} containerStyle={tw`rounded-lg border-[0.8] h-11 border-[${errors ? "#f08a83" : color}] bg-[#E1DFE7] flex-row items-center`}>
           <TextInput
             value={value}
             onBlur={onBlur}
             onChangeText={onChange}
-            style={{ ...tw`w-9/10 p-2 ` }}
+            style={{ ...tw`w-${inputfeild.autoComplete == "password"?"9/10":"full"} p-2 ` }}
             placeholder={inputfeild.placeholder}
             keyboardType={inputfeild.keyboardType}
             autoComplete={inputfeild.autoComplete}
