@@ -1,13 +1,13 @@
 import { Controller } from "react-hook-form";
 import { Theme } from "../constants";
-import { TextInput, View, TouchableOpacity } from "react-native";
+import { TextInput, View, TouchableOpacity, Text } from "react-native";
 import tw from "twrnc";
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useState } from "react"
 import InsetShadow from "react-native-inset-shadow";
 
 
-export default function CustomInput({ control, errors, inputfeild,color}) {
+export default function CustomInput({ control, errors, inputfeild,color,countryCode,maxLength,}) {
   const [rightIcon, setRightIcon] = useState('eye-slash');
   const handlePasswordVisibility = () => {
     if (rightIcon === 'eye') {
@@ -29,6 +29,7 @@ export default function CustomInput({ control, errors, inputfeild,color}) {
       rules={inputfeild.rules}
       render={({ field: { onChange, onBlur, value } }) => (
         <InsetShadow right={false} bottom={false} shadowOffset={0.5} shadowOpacity={0.3} shadowRadius={5} elevation={3} containerStyle={tw`rounded-lg border-[0.8] h-11 border-[${errors ? "#f08a83" : color}] bg-[#E1DFE7] flex-row items-center`}>
+          {inputfeild.name=="mobileNumber"&&<Text style={tw`mx-2`}>{countryCode||"+91"}</Text>}
           <TextInput
             value={value}
             onBlur={onBlur}
@@ -38,6 +39,7 @@ export default function CustomInput({ control, errors, inputfeild,color}) {
             keyboardType={inputfeild.keyboardType}
             autoComplete={inputfeild.autoComplete}
             clearButtonMode="while-editing"
+            maxLength={maxLength}
             // placeholderTextColor={Theme.colors.secondary_light}
             secureTextEntry={inputfeild.secureTextEntry && rightIcon == "eye-slash"}
           />

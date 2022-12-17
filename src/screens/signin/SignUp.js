@@ -35,9 +35,11 @@ export default function SignUp({ navigation }) {
 
   // get form data=====================>>
   const onSubmit = (data) => {
-    const { name, email } = data;
+    const userData= data;
     // console.warn(name, email);
-    // navigation.navigate("MobileVerify")
+    navigation.navigate("MobileVerify",
+    {userData}
+    )
   };
 
   return (
