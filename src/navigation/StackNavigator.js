@@ -1,6 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { SignIn, SignUp,OnboardingScreen } from "../screens";
+import { SignIn, SignUp,OnboardingScreen, } from "../screens";
 import DrawerNavigator from "./DrawerNavigator";
 import { useState, useEffect } from "react"
 import { ActivityIndicator, View } from 'react-native';
@@ -52,6 +52,7 @@ const StackNavigator = () => {
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="SignInWelcome" component={SignInWelcome} />
         <Stack.Screen name="SignIn" component={SignIn} />
+        {/* <Stack.Screen name="MobileVerify" component={MobileVerify} /> */}
         <Stack.Screen name="Drawer" component={DrawerNavigator} />
         {isFirstLaunch && <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} />}
       </Stack.Navigator>

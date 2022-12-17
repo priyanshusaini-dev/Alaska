@@ -1,45 +1,27 @@
-import { useEffect } from "react";
 import {
   View,
-  Text,
   StyleSheet,
-  Image,
+  Text,
   useWindowDimensions,
-  TouchableOpacity,
+  Image,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { CustomInput, HideKeyboard, LogoRounded, MyButton } from "../../../components";
 import tw from "twrnc";
+import { StatusBar } from "expo-status-bar";
 import DropShadow from "react-native-drop-shadow";
 import Svg, { G, Path, Defs, LinearGradient, Stop } from "react-native-svg";
-import { LogoRounded, MyButton } from "../../components";
-import { HideKeyboard, CustomInput } from "../../components";
-import { StatusBar } from "expo-status-bar";
-import { Theme } from "../../constants";
 import { useForm } from "react-hook-form";
-import auth from "@react-native-firebase/auth";
+import { SafeAreaView } from "react-native-safe-area-context";
+
 
 const EMAIL_REGEX =
   /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-const PASS_REGEX = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
-const SignIn = ({ navigation }) => {
-  const { height } = useWindowDimensions();
-  const { colors } = Theme;
 
-  // Handle user state changes=================>
-  useEffect(() => {
-    const subscriber = auth().onAuthStateChanged((user) => {
-      // dispatch(setUser(user));
-      // console.log(user);
-      // if (initializing) setInitializing(false);
-      if (user) {
-        navigation.navigate("Drawer", { screen: "Home" });
-      }
-    });
-    return subscriber; // unsubscribe on unmount
-  }, []);
+export default function SignUp({ navigation }) {
+  const { height, width } = useWindowDimensions();
 
-  // setting react form hook>>==================>>
+  // react hook form=====>
   const {
     control,
     handleSubmit,
@@ -51,21 +33,17 @@ const SignIn = ({ navigation }) => {
     },
   });
 
-  // LOGIN WITH EMAIL=====================>>
+  // get form data=====================>>
   const onSubmit = (data) => {
-    const { email, password } = data;
-    auth()
-      .signInWithEmailAndPassword(email, password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-        // console.log(user);
-      })
-      .catch((err) => alert(err.message));
+    const { name, email } = data;
+    // console.warn(name, email);
+    navigation.navigate("MobileVerify")
   };
 
   return (
     <HideKeyboard>
-      <SafeAreaView style={{ ...tw`h-full`, height }}>
+      <SafeAreaView style={{ height }}>
+        {/* background svg */}
         <View style={[{ ...tw`absolute justify-between h-full`, height }]}>
           <View style={tw``}></View>
           <DropShadow style={styles.shadow}>
@@ -98,10 +76,12 @@ const SignIn = ({ navigation }) => {
             </Svg>
           </DropShadow>
         </View>
+        {/* branding */}
         <View style={tw`flex-row justify-between items-center my-5 mx-8`}>
-          <Text style={[tw`text-9 `, styles.fontPoppinsBold]}>Alaska</Text>
+          <Text style={[tw`text-9 mx-1`, styles.fontPoppinsBold]}>Alaska</Text>
           <LogoRounded />
         </View>
+        {/* background hello image */}
         <View style={tw`absolute w-full items-center h-full justify-between`}>
           <View></View>
           <Image
@@ -110,6 +90,8 @@ const SignIn = ({ navigation }) => {
             resizeMode="contain"
           />
         </View>
+
+        {/* form begin here~~~~~~~=====>> */}
         <View
           style={{
             ...tw`w-full items-center absolute border-2 justify-between`,
@@ -121,11 +103,36 @@ const SignIn = ({ navigation }) => {
             <Text
               style={[tw`text-center text-8 underline`, styles.fontNunitoBold]}
             >
-              Sign In
+              Sign Up
             </Text>
             <View style={tw` mx-5`}>
+              <Text style={tw`text-4 uppercase mt-4 ml-1`}>Name</Text>
+              <CustomInput
+                color="green"
+                control={control}
+                errors={errors.name}
+                inputfeild={{
+                  rules: {
+                    required: true,
+                    minLength: {
+                      value: 3,
+                      message: "Username must be at least 3 characters",
+                    },
+                    maxLength: {
+                      value: 28,
+                      message: "Username must be at most 28 characters",
+                    },
+                  },
+                  name: "name",
+                  autoComplete: "name",
+                  keyboardType: "default",
+                  placeholder: "Name",
+                  secureTextEntry: false,
+                }}
+              />
               <Text style={tw`text-4 uppercase mt-4 ml-1`}>E-mail</Text>
               <CustomInput
+                color="green"
                 control={control}
                 errors={errors.email}
                 inputfeild={{
@@ -148,69 +155,32 @@ const SignIn = ({ navigation }) => {
                   {errors.email.message || "*E-mail is required."}
                 </Text>
               )}
-              <Text style={tw`text-4 uppercase mt-2 ml-1`}>Password</Text>
-
-              <CustomInput
-                control={control}
-                errors={errors.password}
-                inputfeild={{
-                  rules: {
-                    required: true,
-                    pattern: {
-                      value: PASS_REGEX,
-                      message:
-                        "Password must have min 8 and max 18 characters, with at least a symbol,a upper and a lower case characters and a number",
-                    },
-                  },
-                  name: "password",
-                  autoComplete: "password",
-                  keyboardType: "default",
-                  placeholder: "Password",
-                  secureTextEntry: true,
-                }}
-              />
-              {errors.password && (
-                <Text style={tw`text-[#f08a83] text-3 ml-1`}>
-                  {errors.password.message || "*Password is required."}
-                </Text>
-              )}
-
-              <View>
-                <TouchableOpacity style={tw`self-end`}>
-                  <Text style={tw`text-white`}>Forgot Password ? </Text>
-                </TouchableOpacity>
-              </View>
+              <MyButton
+                green
+                style={tw`mx-1 mt-4 mb-2`}
+                onPress={handleSubmit(onSubmit)}
+                textStyle={tw`text-white`}
+              >
+                Next
+              </MyButton>
+              <View style={{ ...tw`bg-black h-[0.2] my-2 mb-3 opacity-50`, }}></View>
               <MyButton
                 pink
-                style={tw`mx-1 mt-4 mb-5`}
-                onPress={handleSubmit(onSubmit)}
+                style={tw`mx-1`}
+                onPress={() => navigation.navigate("SignIn")}
                 textStyle={tw`text-white`}
               >
                 Sign In
               </MyButton>
-              <MyButton
-                green
-                style={tw`mx-1`}
-                onPress={() => navigation.navigate("SignUp")}
-                textStyle={tw`text-white`}
-              >
-                Sign Up
-              </MyButton>
             </View>
           </View>
         </View>
-        {/* <StatusBar
-          hidden={true}
-          barStyle="light-content"
-          backgroundColor="#DCECF6"
-          animated={true}
-        /> */}
+        {/* <StatusBar hidden={true} /> */}
       </SafeAreaView>
     </HideKeyboard>
-  );
-};
 
-export default SignIn;
+  );
+}
 const styles = StyleSheet.create({
   shadow: {
     shadowColor: "rgba(0, 0, 0, 0.25)",
@@ -220,15 +190,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.4,
     shadowRadius: 10,
-  },
-  buttonShadow: {
-    shadowColor: "#84C0DF",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 1,
-    shadowRadius: 4,
   },
   fontPoppinsBold: {
     fontFamily: "Poppins_700Bold",
