@@ -7,7 +7,7 @@ import { useState } from "react"
 import InsetShadow from "react-native-inset-shadow";
 
 
-export default function CustomInput({ control, errors, inputfeild,color,countryCode,maxLength,}) {
+export default function CustomInput({ control, errors, inputfeild,color,countryCode,maxLength,style}) {
   const [rightIcon, setRightIcon] = useState('eye-slash');
   const handlePasswordVisibility = () => {
     if (rightIcon === 'eye') {
@@ -34,7 +34,7 @@ export default function CustomInput({ control, errors, inputfeild,color,countryC
             value={value}
             onBlur={onBlur}
             onChangeText={onChange}
-            style={{ ...tw`w-${inputfeild.autoComplete == "password"?"9/10":"full"} p-2 ` }}
+            style={{ ...tw`w-${inputfeild.autoComplete == "password"?"9/10":"full"} p-2 `,...style }}
             placeholder={inputfeild.placeholder}
             keyboardType={inputfeild.keyboardType}
             autoComplete={inputfeild.autoComplete}

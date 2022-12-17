@@ -28,14 +28,13 @@ const MobileVerify = ({ route, navigation }) => {
   });
   // submit form
   // get form data=====================>>
-  const onSubmit = (data) => {
-    const mobileData = data;
+  const onSubmit = (mobileData) => {
     // setUpdatedUserData((prevData)=>{return{...prevData,data}})
     // console.log(updatedUserData);
-    const newUserData = {...userData,...mobileData}
+    const userSignInData = {...userData,...mobileData}
     // console.log({...userData,...mobileData});
     navigation.navigate("OtpScreen",
-    {newUserData}
+    {userSignInData}
     );
   };
 
